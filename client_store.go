@@ -28,6 +28,7 @@ type ClientStoreItem struct {
 	Secret string `db:"secret"`
 	Domain string `db:"domain"`
 	Data   []byte `db:"data"`
+	Public bool   `db:"public"`
 }
 
 // NewClientStore creates PostgreSQL store instance
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	secret TEXT  NOT NULL,
 	domain TEXT  NOT NULL,
 	data   JSONB NOT NULL,
+	public  BOOL NOT NULL,
 	CONSTRAINT %[1]s_pkey PRIMARY KEY (id)
 );
 `, s.tableName))
@@ -95,10 +97,11 @@ func (s *ClientStore) Create(info oauth2.ClientInfo) error {
 
 	return s.adapter.Exec(
 		context.Background(),
-		fmt.Sprintf("INSERT INTO %s (id, secret, domain, data) VALUES ($1, $2, $3, $4)", s.tableName),
+		fmt.Sprintf("INSERT INTO %s (id, secret, domain, data, public) VALUES ($1, $2, $3, $4, $5)", s.tableName),
 		info.GetID(),
 		info.GetSecret(),
 		info.GetDomain(),
 		data,
+		info.IsPublic(),
 	)
 }

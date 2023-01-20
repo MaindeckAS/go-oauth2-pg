@@ -9,3 +9,5 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/vgarvardt/go-pg-adapter v1.0.0
 )
+	
+replace github.com/go-oauth2/oauth2/v4 v4.5.1 =>  github.com/MaindeckAS/oauth2/v4 v4.5.4
